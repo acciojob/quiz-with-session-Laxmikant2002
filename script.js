@@ -20,7 +20,7 @@ const questions = [
   },
   {
     question: "Which is the largest planet in our solar system?",
-    choices: ["Earth", "Jupiter", "Mars"],
+    choices: ["Earth", "Jupiter", "Mars", "Saturn"],
     answer: "Jupiter",
   },
   {
@@ -62,7 +62,7 @@ function renderQuestions() {
       choiceElement.setAttribute("value", choice);
 
       if (userAnswers[i] === choice) {
-        choiceElement.setAttribute("checked", true);
+        choiceElement.checked = true;
       }
 
       choiceElement.addEventListener("change", () => {
@@ -89,10 +89,18 @@ function submitQuiz() {
     }
     scoreElement.textContent = `Your score is ${score} out of ${questions.length}`;
 
-    localStorage.setItem("score", score);
+  localStorage.setItem("score", score);
+  // Mark that the quiz was submitted so we can show the score on subsequent loads
+  localStorage.setItem("submitted", "true");
+}
+
+// If a score was previously saved AND the quiz was submitted, display it on load
+const savedScore = localStorage.getItem("score");
+const wasSubmitted = localStorage.getItem("submitted");
+if (savedScore !== null && wasSubmitted === "true") {
+  scoreElement.textContent = `Your score is ${savedScore} out of ${questions.length}`;
 }
 
 submitButton.addEventListener("click", submitQuiz);
 
 renderQuestions();
-
